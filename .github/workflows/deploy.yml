@@ -35,53 +35,34 @@ jobs:
       - name: Build assets
         run: npm run build
         
-      - name: Create deployment package
-        run: |
-          mkdir -p deploy
-          rsync -av --exclude='node_modules' \
-                   --exclude='.git' \
-                   --exclude='.github' \
-                   --exclude='tests' \
-                   --exclude='storage/logs/*' \
-                   --exclude='.env' \
-                   --exclude='deploy' \
-                   ./ deploy/
-          cd deploy && tar -czf ../deploy.tar.gz .
-          
-      - name: Deploy to Hostinger via FTP
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+      - name: Deploy to Hostinger via SSH/Rsync
+        uses: easingthemes/ssh-deploy@v5.0.3
         with:
-          server: ${{ secrets.FTP_SERVER }}
-          username: ${{ secrets.FTP_USERNAME }}
-          password: ${{ secrets.FTP_PASSWORD }}
-          server-dir: ${{ secrets.FTP_SERVER_DIR }}
-          local-dir: ./deploy/
-          exclude: |
-            **/.git*
-            **/.git*/**
-            **/node_modules/**
-            storage/logs/**
-            
-      - name: Run post-deployment commands via SSH
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{ secrets.SSH_HOST }}
-          username: ${{ secrets.SSH_USERNAME }}
-          password: ${{ secrets.SSH_PASSWORD }}
-          port: ${{ secrets.SSH_PORT }}
-          script: |
-            cd ${{ secrets.DEPLOY_PATH }}
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          REMOTE_HOST: ${{ secrets.HOSTING_IP }}
+          REMOTE_USER: ${{ secrets.HOSTING_USER }}
+          REMOTE_PORT: ${{ secrets.HOSTING_PORT }}
+          SOURCE: "./"
+          TARGET: ${{ secrets.TARGET_DIR }}
+          ARGS: "-rlgoDzvc -i --delete"
+          EXCLUDE: "/node_modules/, /.git/, /.github/, /tests/, /storage/logs/, /.env, /vendor/"
+          SCRIPT_BEFORE: |
+            whoami
+            ls -al
+          SCRIPT_AFTER: |
+            cd ${{ secrets.TARGET_DIR }}
+            composer install --no-dev --optimize-autoloader --no-interaction
             php artisan config:cache
             php artisan route:cache
             php artisan view:cache
             php artisan migrate --force
             php artisan storage:link
             
-      - name: Notification
+      - name: Deployment Status
         if: always()
         run: |
           if [ ${{ job.status }} == 'success' ]; then
-            echo "✅ Deployment successful!"
+            echo "✅ Deployment completed successfully!"
           else
             echo "❌ Deployment failed!"
           fi

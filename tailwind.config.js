@@ -37,6 +37,21 @@ export default {
                     },
                     border: '#e5e7eb',
                 },
+                primary: {
+                    DEFAULT: '#6366f1',
+                    dark: '#4f46e5',
+                    light: '#818cf8',
+                },
+                accent: {
+                    cyan: '#06b6d4',
+                    purple: '#a855f7',
+                    teal: '#14b8a6',
+                },
+                dark: {
+                    DEFAULT: '#0f172a',
+                    lighter: '#1e293b',
+                    card: '#1e293b',
+                },
             },
             boxShadow: {
                 'sm': '0 1px 2px 0 rgba(0, 0, 0, 0.05)',

@@ -44,17 +44,17 @@ class PortfolioController extends Controller
         // Handle image uploads
         if ($request->hasFile('image_desktop')) {
             $path = $request->file('image_desktop')->store('portfolios', 'public');
-            $validated['image_desktop'] = '/storage/' . $path;
+            $validated['image_desktop'] = '/public/storage/' . $path;
         }
 
         if ($request->hasFile('image_tablet')) {
             $path = $request->file('image_tablet')->store('portfolios', 'public');
-            $validated['image_tablet'] = '/storage/' . $path;
+            $validated['image_tablet'] = '/public/storage/' . $path;
         }
 
         if ($request->hasFile('image_mobile')) {
             $path = $request->file('image_mobile')->store('portfolios', 'public');
-            $validated['image_mobile'] = '/storage/' . $path;
+            $validated['image_mobile'] = '/public/storage/' . $path;
         }
 
         Portfolio::create($validated);
@@ -93,29 +93,29 @@ class PortfolioController extends Controller
         if ($request->hasFile('image_desktop')) {
             // Delete old image
             if ($portfolio->image_desktop) {
-                $oldPath = str_replace('/storage/', '', $portfolio->image_desktop);
+                $oldPath = str_replace('/public/storage/', '', $portfolio->image_desktop);
                 Storage::disk('public')->delete($oldPath);
             }
             $path = $request->file('image_desktop')->store('portfolios', 'public');
-            $validated['image_desktop'] = '/storage/' . $path;
+            $validated['image_desktop'] = '/public/storage/' . $path;
         }
 
         if ($request->hasFile('image_tablet')) {
             if ($portfolio->image_tablet) {
-                $oldPath = str_replace('/storage/', '', $portfolio->image_tablet);
+                $oldPath = str_replace('/public/storage/', '', $portfolio->image_tablet);
                 Storage::disk('public')->delete($oldPath);
             }
             $path = $request->file('image_tablet')->store('portfolios', 'public');
-            $validated['image_tablet'] = '/storage/' . $path;
+            $validated['image_tablet'] = '/public/storage/' . $path;
         }
 
         if ($request->hasFile('image_mobile')) {
             if ($portfolio->image_mobile) {
-                $oldPath = str_replace('/storage/', '', $portfolio->image_mobile);
+                $oldPath = str_replace('/public/storage/', '', $portfolio->image_mobile);
                 Storage::disk('public')->delete($oldPath);
             }
             $path = $request->file('image_mobile')->store('portfolios', 'public');
-            $validated['image_mobile'] = '/storage/' . $path;
+            $validated['image_mobile'] = '/public/storage/' . $path;
         }
 
         $portfolio->update($validated);

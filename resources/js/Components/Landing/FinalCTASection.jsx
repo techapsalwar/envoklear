@@ -4,15 +4,17 @@ import { useInView } from 'react-intersection-observer';
 import { Check, MessageCircle, Sparkles, Flame } from 'lucide-react';
 import MagneticButton from './ui/MagneticButton';
 import { CONTACT } from './config';
+import QuoteModal from '@/Components/QuoteModal';
 
 export default function FinalCTASection() {
     const [ref, inView] = useInView({ triggerOnce: true, threshold: 0.1 });
     const [showConfetti, setShowConfetti] = useState(false);
+    const [showQuoteModal, setShowQuoteModal] = useState(false);
 
     const handleCTAClick = () => {
         setShowConfetti(true);
         setTimeout(() => {
-            window.open(CONTACT.whatsappUrl, '_blank');
+            setShowQuoteModal(true);
         }, 500);
         setTimeout(() => setShowConfetti(false), 3000);
     };
@@ -134,6 +136,9 @@ export default function FinalCTASection() {
                     </motion.p>
                 </motion.div>
             </div>
+
+            {/* Quote Modal */}
+            <QuoteModal show={showQuoteModal} onClose={() => setShowQuoteModal(false)} />
         </section>
     );
 }

@@ -9,7 +9,8 @@ import {
     LogOut,
     Menu,
     X,
-    Bell
+    Bell,
+    Briefcase
 } from 'lucide-react';
 
 export default function AdminLayout({ children }) {
@@ -19,6 +20,7 @@ export default function AdminLayout({ children }) {
     const navigation = [
         { name: 'Dashboard', href: route('dashboard'), icon: LayoutDashboard },
         { name: 'Blogs', href: route('admin.blogs.index'), icon: FileText },
+        { name: 'Portfolios', href: route('admin.portfolios.index'), icon: Briefcase },
         { name: 'Quotes', href: route('admin.quotes.index'), icon: MessageSquare },
         { name: 'Subscribers', href: route('admin.subscribers.index'), icon: Users },
         { name: 'Settings', href: '#', icon: Settings },

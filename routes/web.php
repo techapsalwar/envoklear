@@ -10,9 +10,14 @@ use App\Http\Controllers\Public\ContactController;
 use App\Http\Controllers\Public\NewsletterController;
 use App\Http\Controllers\Admin\BlogController as AdminBlogController;
 use App\Http\Controllers\Admin\QuoteController as AdminQuoteController;
+use App\Http\Controllers\Admin\PortfolioController as AdminPortfolioController;
+use App\Models\Portfolio;
 
 Route::get('/', function () {
-    return Inertia::render('Welcome');
+    $portfolios = Portfolio::where('is_active', true)->orderBy('sort_order')->get();
+    return Inertia::render('Welcome', [
+        'portfolios' => $portfolios
+    ]);
 })->name('home');
 
 Route::get('/about', function () {
@@ -61,6 +66,14 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/quotes/{id}', [AdminQuoteController::class, 'show'])->name('quotes.show');
         Route::put('/quotes/{id}', [AdminQuoteController::class, 'update'])->name('quotes.update');
         Route::delete('/quotes/{id}', [AdminQuoteController::class, 'destroy'])->name('quotes.destroy');
+
+        // Portfolios
+        Route::get('/portfolios', [AdminPortfolioController::class, 'index'])->name('portfolios.index');
+        Route::get('/portfolios/create', [AdminPortfolioController::class, 'create'])->name('portfolios.create');
+        Route::post('/portfolios', [AdminPortfolioController::class, 'store'])->name('portfolios.store');
+        Route::get('/portfolios/{id}/edit', [AdminPortfolioController::class, 'edit'])->name('portfolios.edit');
+        Route::put('/portfolios/{id}', [AdminPortfolioController::class, 'update'])->name('portfolios.update');
+        Route::delete('/portfolios/{id}', [AdminPortfolioController::class, 'destroy'])->name('portfolios.destroy');
 
         // Newsletter
         Route::get('/subscribers', function () { return Inertia::render('Admin/Newsletter/Index'); })->name('subscribers.index');

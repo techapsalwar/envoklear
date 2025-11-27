@@ -86,7 +86,10 @@ export default function Carousel3D({
                         className="absolute w-full max-w-lg"
                         animate={getItemStyle(index)}
                         transition={{ duration: 0.5, ease: 'easeOut' }}
-                        style={{ transformStyle: 'preserve-3d' }}
+                        style={{ 
+                            transformStyle: 'preserve-3d',
+                            pointerEvents: index === currentIndex ? 'auto' : 'none'
+                        }}
                     >
                         {item}
                     </motion.div>

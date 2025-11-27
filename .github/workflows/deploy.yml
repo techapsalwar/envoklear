@@ -63,6 +63,18 @@ jobs:
               sed -i "s|__DIR__.'/../bootstrap/app.php'|__DIR__.'/bootstrap/app.php'|g" index.php
             fi
             
+            # Ensure .env exists and has APP_KEY
+            if [ ! -f ".env" ]; then
+              echo "⚠️  .env not found, creating from example..."
+              cp .env.example .env
+            fi
+            
+            # Generate APP_KEY if missing
+            if ! grep -q "APP_KEY=base64:" .env; then
+              echo "🔑 Generating APP_KEY..."
+              php artisan key:generate --force
+            fi
+            
             # Install dependencies and setup
             composer install --no-dev --optimize-autoloader --no-interaction
             
@@ -70,6 +82,8 @@ jobs:
             chmod -R 755 storage bootstrap/cache
             chmod 644 index.php 2>/dev/null || true
             chmod 644 .htaccess 2>/dev/null || true
+            find storage -type f -exec chmod 644 {} \; 2>/dev/null || true
+            find bootstrap/cache -type f -exec chmod 644 {} \; 2>/dev/null || true
             
             # Clear and cache
             php artisan config:clear

@@ -80,7 +80,7 @@ export default function ComparisonSection() {
     };
 
     return (
-        <section className="relative py-24 bg-dark-lighter overflow-hidden">
+        <section className="relative py-24 bg-dark overflow-hidden">
             {/* Confetti Effect */}
             {showConfetti && (
                 <div className="confetti absolute inset-0 overflow-hidden pointer-events-none">

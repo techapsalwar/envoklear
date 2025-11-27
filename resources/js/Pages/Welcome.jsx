@@ -2,6 +2,7 @@ import { Head } from '@inertiajs/react';
 import GuestLayout from '@/Layouts/GuestLayout';
 
 // Landing Page Sections
+import LandingHeader from '@/Components/Landing/LandingHeader';
 import HeroSection from '@/Components/Landing/HeroSection';
 import ProblemSection from '@/Components/Landing/ProblemSection';
 import SolutionSection from '@/Components/Landing/SolutionSection';
@@ -15,10 +16,13 @@ import FAQSection from '@/Components/Landing/FAQSection';
 import FinalCTASection from '@/Components/Landing/FinalCTASection';
 import FloatingElements from '@/Components/Landing/FloatingElements';
 
-export default function Welcome() {
+export default function Welcome({ portfolios = [] }) {
     return (
         <>
-            <Head title="AI-First Web Development Agency | EnvoKlear" />
+            <Head title="AI Powered Web Development Agency | EnvoKlear" />
+            
+            {/* Landing Page Header */}
+            <LandingHeader />
             
             {/* Dark theme wrapper for landing page */}
             <div className="bg-dark min-h-screen dark-scrollbar">
@@ -32,7 +36,7 @@ export default function Welcome() {
                 <SolutionSection />
                 
                 {/* Portfolio Section - 3D carousel, device switcher */}
-                <PortfolioSection />
+                <PortfolioSection portfolios={portfolios} />
                 
                 {/* Comparison Section - Animated table, savings counter */}
                 <ComparisonSection />

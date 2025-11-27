@@ -2,8 +2,8 @@
 // Centralized configuration for contact info, pricing, and other settings
 
 export const CONTACT = {
-    whatsapp: '919876543210',
-    whatsappUrl: 'https://wa.me/919876543210',
+    whatsapp: '917615092749',
+    whatsappUrl: 'https://wa.me/917615092749',
     whatsappMessage: 'Hi! I\'m interested in getting a website for my business.',
 };
 

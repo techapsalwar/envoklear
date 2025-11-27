@@ -26,7 +26,7 @@ export default function CostCalculator({ className = '' }) {
     };
 
     return (
-        <div className={`bg-dark-lighter rounded-2xl p-8 border border-white/10 ${className}`}>
+        <div className={`bg-dark-lighter rounded-2xl p-8 border border-white/10 flex flex-col ${className}`}>
             <h3 className="text-2xl font-bold text-white mb-6">
                 💸 The Hidden Shopify Tax
             </h3>
@@ -55,7 +55,7 @@ export default function CostCalculator({ className = '' }) {
             </div>
 
             {/* Cost Breakdown */}
-            <div className="space-y-4 mb-8">
+            <div className="space-y-4 mb-8 flex-grow">
                 <CostBar 
                     label="Platform Fee" 
                     amount={shopifyMonthlyBase * 12 * years}
@@ -78,7 +78,7 @@ export default function CostCalculator({ className = '' }) {
 
             {/* Total */}
             <motion.div 
-                className="bg-red-500/20 border border-red-500/30 rounded-xl p-6 text-center"
+                className="bg-red-500/20 border border-red-500/30 rounded-xl p-6 text-center mt-auto"
                 animate={{ scale: [1, 1.02, 1] }}
                 transition={{ duration: 2, repeat: Infinity }}
             >

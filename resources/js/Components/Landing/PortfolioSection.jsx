@@ -4,36 +4,40 @@ import { useInView } from 'react-intersection-observer';
 import { Monitor, Tablet, Smartphone, ExternalLink } from 'lucide-react';
 import Carousel3D from './ui/Carousel3D';
 
-export default function PortfolioSection() {
+// Default projects if no portfolios from database
+const defaultProjects = [
+    {
+        title: 'E-Commerce Store',
+        category: 'Retail',
+        description: 'Modern e-commerce platform with payment integration',
+        color: 'from-blue-500 to-cyan-500',
+    },
+    {
+        title: 'Restaurant Website',
+        category: 'Food & Beverage',
+        description: 'Online ordering and reservation system',
+        color: 'from-orange-500 to-red-500',
+    },
+    {
+        title: 'Healthcare Portal',
+        category: 'Medical',
+        description: 'Patient management and appointment booking',
+        color: 'from-green-500 to-emerald-500',
+    },
+    {
+        title: 'Real Estate Platform',
+        category: 'Property',
+        description: 'Property listings with virtual tours',
+        color: 'from-purple-500 to-pink-500',
+    },
+];
+
+export default function PortfolioSection({ portfolios = [] }) {
     const [ref, inView] = useInView({ triggerOnce: true, threshold: 0.1 });
     const [activeDevice, setActiveDevice] = useState('desktop');
 
-    const projects = [
-        {
-            title: 'E-Commerce Store',
-            category: 'Retail',
-            description: 'Modern e-commerce platform with payment integration',
-            color: 'from-blue-500 to-cyan-500',
-        },
-        {
-            title: 'Restaurant Website',
-            category: 'Food & Beverage',
-            description: 'Online ordering and reservation system',
-            color: 'from-orange-500 to-red-500',
-        },
-        {
-            title: 'Healthcare Portal',
-            category: 'Medical',
-            description: 'Patient management and appointment booking',
-            color: 'from-green-500 to-emerald-500',
-        },
-        {
-            title: 'Real Estate Platform',
-            category: 'Property',
-            description: 'Property listings with virtual tours',
-            color: 'from-purple-500 to-pink-500',
-        },
-    ];
+    // Use database portfolios if available, otherwise use defaults
+    const projects = portfolios.length > 0 ? portfolios : defaultProjects;
 
     const devices = [
         { id: 'desktop', icon: Monitor, label: 'Desktop' },
@@ -52,23 +56,52 @@ export default function PortfolioSection() {
         }
     };
 
-    const portfolioItems = projects.map((project, index) => (
-        <div 
-            key={index}
-            className={`device-frame ${getDeviceDimensions()} mx-auto transition-all duration-500`}
-        >
-            <div className={`device-frame-screen h-full bg-gradient-to-br ${project.color} flex flex-col items-center justify-center p-6 text-center`}>
-                <span className="text-xs text-white/70 uppercase tracking-wider mb-2">
-                    {project.category}
-                </span>
-                <h3 className="text-xl font-bold text-white mb-2">{project.title}</h3>
-                <p className="text-sm text-white/80 mb-4">{project.description}</p>
-                <button className="inline-flex items-center gap-2 px-4 py-2 bg-white/20 rounded-full text-sm text-white hover:bg-white/30 transition-colors">
-                    View Project <ExternalLink className="w-4 h-4" />
-                </button>
+    // Get the appropriate image based on device
+    const getDeviceImage = (project) => {
+        switch (activeDevice) {
+            case 'tablet':
+                return project.image_tablet;
+            case 'mobile':
+                return project.image_mobile;
+            default:
+                return project.image_desktop;
+        }
+    };
+
+    const portfolioItems = projects.map((project, index) => {
+        const deviceImage = getDeviceImage(project);
+        
+        const handleClick = () => {
+            if (project.website_url) {
+                window.open(project.website_url, '_blank', 'noopener,noreferrer');
+            }
+        };
+        
+        return (
+            <div 
+                key={project.id || index}
+                className={`device-frame ${getDeviceDimensions()} mx-auto transition-all duration-500 ${project.website_url ? 'cursor-pointer' : ''}`}
+                onClick={handleClick}
+            >
+                <div className={`device-frame-screen h-full bg-gradient-to-br ${project.color} relative overflow-hidden group`}>
+                    {/* Background Image if available */}
+                    {deviceImage && (
+                        <img 
+                            src={deviceImage} 
+                            alt={project.title}
+                            className="absolute inset-0 w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                        />
+                    )}
+                    {/* Hover overlay */}
+                    {project.website_url && (
+                        <div className="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-all duration-300 flex items-center justify-center">
+                            <ExternalLink className="w-8 h-8 text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                        </div>
+                    )}
+                </div>
             </div>
-        </div>
-    ));
+        );
+    });
 
     return (
         <section className="relative py-24 bg-dark overflow-hidden">

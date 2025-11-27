@@ -89,18 +89,22 @@ export default function SolutionSection() {
                         beforeLabel="Old Way"
                         afterLabel="EnvoKlear Way"
                         beforeContent={
-                            <div className="bg-red-900/30 border border-red-500/30 rounded-2xl p-8 h-64 flex flex-col justify-center">
-                                <h3 className="text-2xl font-bold text-red-400 mb-6">The Old Way</h3>
-                                <div className="space-y-4">
-                                    <div className="flex items-center gap-3">
+                            <div className="relative overflow-hidden bg-red-900/70 border border-red-500/30 rounded-2xl p-8 h-64 flex flex-col justify-center items-center text-center backdrop-blur">
+                                {/* Blurred red backdrop to give depth to the background */}
+                                <div className="absolute inset-0 -z-10 overflow-hidden">
+                                    <div className="absolute inset-[-20%] bg-red-800/50 blur-3xl transform scale-110" />
+                                </div>
+                                <h3 className="text-2xl font-bold text-red-300 mb-6">The Old Way</h3>
+                                <div className="space-y-4 max-w-sm mx-auto">
+                                    <div className="flex items-center justify-left gap-3">
                                         <X className="w-5 h-5 text-red-400" />
                                         <span className="text-white">₹3,50,000 total cost</span>
                                     </div>
-                                    <div className="flex items-center gap-3">
+                                    <div className="flex items-center justify-left gap-3">
                                         <X className="w-5 h-5 text-red-400" />
                                         <span className="text-white">12 weeks delivery</span>
                                     </div>
-                                    <div className="flex items-center gap-3">
+                                    <div className="flex items-center justify-left gap-3">
                                         <X className="w-5 h-5 text-red-400" />
                                         <span className="text-white">₹5,000/month forever</span>
                                     </div>
@@ -108,18 +112,18 @@ export default function SolutionSection() {
                             </div>
                         }
                         afterContent={
-                            <div className="bg-green-900/30 border border-green-500/30 rounded-2xl p-8 h-64 flex flex-col justify-center">
+                            <div className="bg-green-900/30 border border-green-500/30 rounded-2xl p-8 h-64 flex flex-col justify-center items-center text-center backdrop-blur-sm">
                                 <h3 className="text-2xl font-bold text-green-400 mb-6">The EnvoKlear Way</h3>
-                                <div className="space-y-4">
-                                    <div className="flex items-center gap-3">
+                                <div className="space-y-4 max-w-sm mx-auto">
+                                    <div className="flex items-center justify-left gap-3">
                                         <CheckCircle className="w-5 h-5 text-green-400" />
                                         <span className="text-white">₹75,000 one-time</span>
                                     </div>
-                                    <div className="flex items-center gap-3">
+                                    <div className="flex items-center justify-left gap-3">
                                         <CheckCircle className="w-5 h-5 text-green-400" />
                                         <span className="text-white">7 days delivery</span>
                                     </div>
-                                    <div className="flex items-center gap-3">
+                                    <div className="flex items-center justify-left gap-3">
                                         <CheckCircle className="w-5 h-5 text-green-400" />
                                         <span className="text-white">₹0/month - Own it forever</span>
                                     </div>

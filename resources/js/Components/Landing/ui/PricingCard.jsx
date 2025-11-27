@@ -80,7 +80,7 @@ export default function PricingCard({
                             ₹{originalPrice.toLocaleString('en-IN')}
                         </span>
                         <span className="ml-2 text-xs bg-green-500/20 text-green-400 px-2 py-0.5 rounded-full">
-                            SAVE {Math.round(((originalPrice - price) / originalPrice) * 100)}%
+                            SAVE {originalPrice > 0 ? Math.round(((originalPrice - price) / originalPrice) * 100) : 0}%
                         </span>
                     </div>
                 )}

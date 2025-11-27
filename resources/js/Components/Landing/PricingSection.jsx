@@ -3,60 +3,16 @@ import { motion } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
 import { Shield, Lock, UserCheck, Ban } from 'lucide-react';
 import PricingCard from './ui/PricingCard';
+import { CONTACT, PRICING, EMI_TENURES } from './config';
 
 export default function PricingSection() {
     const [ref, inView] = useInView({ triggerOnce: true, threshold: 0.1 });
     const [selectedTenure, setSelectedTenure] = useState(12);
 
     const plans = [
-        {
-            name: 'STARTER',
-            price: 49999,
-            originalPrice: 120000,
-            description: 'Perfect for small businesses getting started online',
-            features: [
-                '5 Pages Website',
-                'Mobile Responsive',
-                'Basic SEO Setup',
-                'Contact Form',
-                'Social Media Links',
-                '1 Month Support',
-            ],
-            isPopular: false,
-        },
-        {
-            name: 'BUSINESS',
-            price: 89999,
-            originalPrice: 250000,
-            description: 'Best for growing businesses with e-commerce needs',
-            features: [
-                '10 Pages Website',
-                'E-commerce Ready (50 products)',
-                'Payment Gateway Integration',
-                'Google Analytics',
-                'WhatsApp Integration',
-                'Blog/News Section',
-                '3 Months Support',
-            ],
-            isPopular: true,
-        },
-        {
-            name: 'PREMIUM',
-            price: 149999,
-            originalPrice: 400000,
-            description: 'For enterprises needing custom solutions',
-            features: [
-                'Unlimited Pages',
-                'Custom Web Application',
-                'Advanced E-commerce (Unlimited)',
-                'Full SEO Optimization',
-                'Custom Admin Panel',
-                'API Integrations',
-                'Priority Support (6 months)',
-                'Monthly Performance Reports',
-            ],
-            isPopular: false,
-        },
+        { ...PRICING.starter, isPopular: false },
+        { ...PRICING.business, isPopular: true },
+        { ...PRICING.premium, isPopular: false },
     ];
 
     const trustBadges = [
@@ -66,11 +22,7 @@ export default function PricingSection() {
         { icon: Ban, text: 'No Monthly Fees' },
     ];
 
-    const emiTenures = [
-        { months: 3, label: '3 months' },
-        { months: 6, label: '6 months' },
-        { months: 12, label: '12 months' },
-    ];
+    const emiTenures = EMI_TENURES;
 
     const calculateEMI = (price) => {
         // Simple EMI calculation (no interest for simplicity)
@@ -128,7 +80,7 @@ export default function PricingSection() {
                                 features={plan.features}
                                 isPopular={plan.isPopular}
                                 ctaText="Get Started"
-                                onCtaClick={() => window.open('https://wa.me/919876543210', '_blank')}
+                                onCtaClick={() => window.open(CONTACT.whatsappUrl, '_blank')}
                             />
                         </motion.div>
                     ))}

@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
 import { Check, MessageCircle, Sparkles, Flame } from 'lucide-react';
 import MagneticButton from './ui/MagneticButton';
+import { CONTACT } from './config';
 
 export default function FinalCTASection() {
     const [ref, inView] = useInView({ triggerOnce: true, threshold: 0.1 });
@@ -11,7 +12,7 @@ export default function FinalCTASection() {
     const handleCTAClick = () => {
         setShowConfetti(true);
         setTimeout(() => {
-            window.open('https://wa.me/919876543210', '_blank');
+            window.open(CONTACT.whatsappUrl, '_blank');
         }, 500);
         setTimeout(() => setShowConfetti(false), 3000);
     };
@@ -112,7 +113,7 @@ export default function FinalCTASection() {
                         </MagneticButton>
 
                         <a
-                            href="https://wa.me/919876543210"
+                            href={CONTACT.whatsappUrl}
                             target="_blank"
                             rel="noopener noreferrer"
                             className="inline-flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white px-8 py-4 rounded-full font-bold text-lg transition-all hover:scale-105"

@@ -4,15 +4,16 @@ import { useInView } from 'react-intersection-observer';
 import { ChevronDown, Monitor, Tablet, Smartphone } from 'lucide-react';
 import AnimatedCounter from './ui/AnimatedCounter';
 import MagneticButton from './ui/MagneticButton';
+import { CONTACT, STATS } from './config';
 
 export default function HeroSection() {
     const [statsRef, statsInView] = useInView({ triggerOnce: true, threshold: 0.2 });
 
     const stats = [
-        { value: 50, suffix: '+', label: 'Websites Delivered' },
-        { value: 7, suffix: ' Days', label: 'Avg Delivery Time' },
-        { value: 70, suffix: '%', label: 'Cost Saved' },
-        { value: 3.5, suffix: 'L+', label: 'Client Savings', prefix: '₹' },
+        { value: STATS.websitesDelivered, suffix: '+', label: 'Websites Delivered' },
+        { value: STATS.avgDeliveryDays, suffix: ' Days', label: 'Avg Delivery Time' },
+        { value: STATS.costSavedPercent, suffix: '%', label: 'Cost Saved' },
+        { value: STATS.clientSavingsLakhs, suffix: 'L+', label: 'Client Savings', prefix: '₹' },
     ];
 
     const scrollToSection = () => {
@@ -89,7 +90,7 @@ export default function HeroSection() {
                             transition={{ duration: 0.6, delay: 0.6 }}
                             className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start mb-12"
                         >
-                            <MagneticButton onClick={() => window.open('https://wa.me/919876543210', '_blank')}>
+                            <MagneticButton onClick={() => window.open(CONTACT.whatsappUrl, '_blank')}>
                                 Get Free Consultation
                             </MagneticButton>
                             <MagneticButton variant="secondary" onClick={scrollToSection}>

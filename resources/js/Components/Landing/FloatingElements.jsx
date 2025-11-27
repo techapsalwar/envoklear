@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { MessageCircle, ChevronUp, X } from 'lucide-react';
+import { CONTACT } from './config';
 
 export default function FloatingElements() {
     const [showScrollTop, setShowScrollTop] = useState(false);
@@ -66,7 +67,7 @@ export default function FloatingElements() {
                 </AnimatePresence>
 
                 <motion.a
-                    href="https://wa.me/919876543210?text=Hi! I'm interested in getting a website for my business."
+                    href={`${CONTACT.whatsappUrl}?text=${encodeURIComponent(CONTACT.whatsappMessage)}`}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="flex items-center justify-center w-14 h-14 bg-green-500 rounded-full shadow-lg hover:bg-green-600 transition-colors group"

@@ -2,6 +2,7 @@ import { motion } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
 import { MessageCircle } from 'lucide-react';
 import Accordion from './ui/Accordion';
+import { CONTACT } from './config';
 
 export default function FAQSection() {
     const [ref, inView] = useInView({ triggerOnce: true, threshold: 0.1 });
@@ -78,7 +79,7 @@ export default function FAQSection() {
                 >
                     <p className="text-gray-400 mb-4">Still have questions?</p>
                     <a
-                        href="https://wa.me/919876543210"
+                        href={CONTACT.whatsappUrl}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="inline-flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-full font-semibold transition-colors"

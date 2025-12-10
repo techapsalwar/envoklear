@@ -16,12 +16,12 @@ class TestEmail extends Command
         
         try {
             Mail::raw('This is a test email from EnvoKlear Laravel application.', function ($message) {
-                $message->to('envoklear@gmail.com')
+                $message->to('envoclear@gmail.com')
                     ->subject('Test Email from EnvoKlear');
             });
             
             $this->info('✅ Email sent successfully!');
-            $this->info('Check envoklear@gmail.com inbox.');
+            $this->info('Check envoclear@gmail.com inbox.');
         } catch (\Exception $e) {
             $this->error('❌ Failed to send email:');
             $this->error($e->getMessage());

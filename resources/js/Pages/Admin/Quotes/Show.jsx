@@ -196,8 +196,8 @@ export default function QuoteShow({ quote }) {
                                     <div key={msg.id} className={`flex ${msg.direction === 'outbound' ? 'justify-end' : 'justify-start'}`}>
                                         <div
                                             className={`max-w-[85%] rounded-2xl p-5 shadow-sm ${msg.direction === 'outbound'
-                                                    ? 'bg-gradient-to-br from-envoklear-green/10 to-transparent border border-envoklear-green/20 rounded-tr-none'
-                                                    : 'bg-white border border-gray-100 rounded-tl-none'
+                                                ? 'bg-gradient-to-br from-envoklear-green/10 to-transparent border border-envoklear-green/20 rounded-tr-none'
+                                                : 'bg-white border border-gray-100 rounded-tl-none'
                                                 }`}
                                         >
                                             <div className="flex items-center justify-between mb-3 text-xs border-b border-gray-100/50 pb-2">
@@ -228,7 +228,15 @@ export default function QuoteShow({ quote }) {
                                                         Subject: {msg.subject}
                                                     </div>
                                                 )}
-                                                {msg.body_text || <div dangerouslySetInnerHTML={{ __html: msg.body_html }} className="prose prose-sm max-w-none" />}
+                                                {/* content rendering: favor HTML if valid, fallback to text, or show placeholder */}
+                                                {msg.body_html ? (
+                                                    <div
+                                                        dangerouslySetInnerHTML={{ __html: msg.body_html }}
+                                                        className="prose prose-sm max-w-none prose-p:my-1 prose-a:text-blue-600 hover:prose-a:underline"
+                                                    />
+                                                ) : (
+                                                    <div className="whitespace-pre-wrap">{msg.body_text || '(No content)'}</div>
+                                                )}
                                             </div>
                                         </div>
                                     </div>

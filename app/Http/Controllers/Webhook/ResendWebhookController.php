@@ -42,14 +42,25 @@ class ResendWebhookController extends Controller
         $rawTo = $data['to'] ?? [];
         $toEmail = is_array($rawTo) ? implode(', ', $rawTo) : (string)$rawTo;
         
+        // Content might be missing or empty
         $subject = $data['subject'] ?? 'No Subject';
-        $bodyHtml = $data['html'] ?? '';
-        $bodyText = $data['text'] ?? '';
+        $bodyHtml = $data['html'] ?? null;
+        $bodyText = $data['text'] ?? null;
+
+        // Fallback: If text is missing but HTML exists, strip tags. If HTML missing but text exists, nl2br.
+        if (empty($bodyText) && !empty($bodyHtml)) {
+            $bodyText = strip_tags($bodyHtml);
+        }
+        if (empty($bodyHtml) && !empty($bodyText)) {
+            $bodyHtml = nl2br(e($bodyText));
+        }
 
         Log::info('Processing inbound email', [
             'raw_from' => $rawFrom,
             'extracted_email' => $fromEmail,
             'subject' => $subject,
+            'has_html' => !empty($bodyHtml),
+            'has_text' => !empty($bodyText),
         ]);
 
         if (empty($fromEmail)) {

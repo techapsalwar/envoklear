@@ -1,20 +1,39 @@
 import { Head, Link, router, useForm } from '@inertiajs/react';
+import { useState } from 'react';
 import AdminLayout from '@/Layouts/AdminLayout';
 import Card from '@/Components/UI/Card';
 import Button from '@/Components/UI/Button';
-import { ArrowLeft, Mail, Phone, Calendar, Building, Globe, DollarSign } from 'lucide-react';
+import { ArrowLeft, Mail, Phone, Calendar, Building, Globe, DollarSign, Send, MessageSquare } from 'lucide-react';
 
 export default function QuoteShow({ quote }) {
+    const [showReplyForm, setShowReplyForm] = useState(false);
+
     const { data, setData, put, processing } = useForm({
         status: quote.status,
         priority: quote.priority,
         notes: quote.notes || '',
     });
 
+    const replyForm = useForm({
+        subject: `Re: Your Quote Request - ${quote.service_type || 'EnvoKlear'}`,
+        message: '',
+    });
+
     const handleSubmit = (e) => {
         e.preventDefault();
         put(route('admin.quotes.update', quote.id), {
             preserveScroll: true,
+        });
+    };
+
+    const handleReply = (e) => {
+        e.preventDefault();
+        replyForm.post(route('admin.quotes.reply', quote.id), {
+            preserveScroll: true,
+            onSuccess: () => {
+                setShowReplyForm(false);
+                replyForm.reset();
+            },
         });
     };
 
@@ -39,8 +58,77 @@ export default function QuoteShow({ quote }) {
                     <ArrowLeft size={16} className="mr-1" />
                     Back to Quotes
                 </Link>
-                <h1 className="text-2xl font-bold text-gray-900">Quote Request #{quote.id}</h1>
+                <div className="flex items-center justify-between">
+                    <h1 className="text-2xl font-bold text-gray-900">Quote Request #{quote.id}</h1>
+                    <Button
+                        variant="primary"
+                        onClick={() => setShowReplyForm(!showReplyForm)}
+                        className="flex items-center gap-2"
+                    >
+                        <MessageSquare size={16} />
+                        {showReplyForm ? 'Cancel Reply' : 'Reply to Client'}
+                    </Button>
+                </div>
             </div>
+
+            {/* Reply Form */}
+            {showReplyForm && (
+                <Card className="p-6 mb-6 border-2 border-envoklear-green">
+                    <h2 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
+                        <Send size={20} className="text-envoklear-green" />
+                        Send Email Reply
+                    </h2>
+                    <p className="text-sm text-gray-500 mb-4">
+                        This will send an email to: <strong className="text-gray-900">{quote.email}</strong>
+                    </p>
+                    <form onSubmit={handleReply} className="space-y-4">
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">Subject</label>
+                            <input
+                                type="text"
+                                value={replyForm.data.subject}
+                                onChange={(e) => replyForm.setData('subject', e.target.value)}
+                                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-envoklear-green focus:border-envoklear-green"
+                                placeholder="Email subject..."
+                            />
+                            {replyForm.errors.subject && (
+                                <p className="text-red-500 text-sm mt-1">{replyForm.errors.subject}</p>
+                            )}
+                        </div>
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">Message</label>
+                            <textarea
+                                value={replyForm.data.message}
+                                onChange={(e) => replyForm.setData('message', e.target.value)}
+                                rows="6"
+                                placeholder="Type your reply message here..."
+                                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-envoklear-green focus:border-envoklear-green"
+                            ></textarea>
+                            {replyForm.errors.message && (
+                                <p className="text-red-500 text-sm mt-1">{replyForm.errors.message}</p>
+                            )}
+                        </div>
+                        <div className="flex gap-3">
+                            <Button
+                                type="submit"
+                                variant="primary"
+                                processing={replyForm.processing}
+                                className="flex items-center gap-2"
+                            >
+                                <Send size={16} />
+                                Send Reply
+                            </Button>
+                            <Button
+                                type="button"
+                                variant="outline"
+                                onClick={() => setShowReplyForm(false)}
+                            >
+                                Cancel
+                            </Button>
+                        </div>
+                    </form>
+                </Card>
+            )}
 
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 {/* Main Details */}
@@ -93,6 +181,66 @@ export default function QuoteShow({ quote }) {
                                 </div>
                             )}
                         </div>
+                    </Card>
+
+                    {/* Email Conversation History */}
+                    <Card className="p-6">
+                        <h2 className="text-lg font-bold text-gray-900 mb-6 flex items-center gap-2">
+                            <MessageSquare size={20} className="text-envoklear-green" />
+                            Email Conversation
+                        </h2>
+
+                        {quote.email_messages && quote.email_messages.length > 0 ? (
+                            <div className="space-y-6">
+                                {quote.email_messages.map((msg) => (
+                                    <div key={msg.id} className={`flex ${msg.direction === 'outbound' ? 'justify-end' : 'justify-start'}`}>
+                                        <div
+                                            className={`max-w-[85%] rounded-2xl p-5 shadow-sm ${msg.direction === 'outbound'
+                                                    ? 'bg-gradient-to-br from-envoklear-green/10 to-transparent border border-envoklear-green/20 rounded-tr-none'
+                                                    : 'bg-white border border-gray-100 rounded-tl-none'
+                                                }`}
+                                        >
+                                            <div className="flex items-center justify-between mb-3 text-xs border-b border-gray-100/50 pb-2">
+                                                <span className={`font-bold flex items-center gap-2 ${msg.direction === 'outbound' ? 'text-envoklear-green' : 'text-gray-700'
+                                                    }`}>
+                                                    {msg.direction === 'outbound' ? (
+                                                        <>
+                                                            <span>Us</span>
+                                                            <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-envoklear-green/10">Admin</span>
+                                                        </>
+                                                    ) : (
+                                                        <>
+                                                            <span>{msg.from_name || quote.name}</span>
+                                                            <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-gray-100">Client</span>
+                                                        </>
+                                                    )}
+                                                </span>
+                                                <span className="text-gray-400">
+                                                    {new Date(msg.created_at).toLocaleString([], {
+                                                        month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit'
+                                                    })}
+                                                </span>
+                                            </div>
+
+                                            <div className="text-sm text-gray-700 leading-relaxed whitespace-pre-wrap font-sans">
+                                                {msg.subject && (
+                                                    <div className="mb-2 font-medium text-gray-900 pb-2 border-b border-gray-100/50">
+                                                        Subject: {msg.subject}
+                                                    </div>
+                                                )}
+                                                {msg.body_text || <div dangerouslySetInnerHTML={{ __html: msg.body_html }} className="prose prose-sm max-w-none" />}
+                                            </div>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        ) : (
+                            <div className="text-center py-12 bg-gray-50 rounded-lg border border-dashed border-gray-200">
+                                <Mail size={32} className="mx-auto text-gray-300 mb-3" />
+                                <p className="text-gray-500 font-medium">No email history yet</p>
+                                <p className="text-sm text-gray-400 mt-1">Replies sent via dashboard or received from client will appear here.</p>
+                            </div>
+                        )}
                     </Card>
 
                     <Card className="p-6">

@@ -1,22 +1,25 @@
 <?php
 
+use App\Http\Controllers\Admin\BlogController as AdminBlogController;
+use App\Http\Controllers\Admin\PortfolioController as AdminPortfolioController;
+use App\Http\Controllers\Admin\QuoteController as AdminQuoteController;
 use App\Http\Controllers\ProfileController;
-use Illuminate\Foundation\Application;
-use Illuminate\Support\Facades\Route;
-use Inertia\Inertia;
-
 use App\Http\Controllers\Public\BlogController;
 use App\Http\Controllers\Public\ContactController;
 use App\Http\Controllers\Public\NewsletterController;
-use App\Http\Controllers\Admin\BlogController as AdminBlogController;
-use App\Http\Controllers\Admin\QuoteController as AdminQuoteController;
-use App\Http\Controllers\Admin\PortfolioController as AdminPortfolioController;
+use App\Http\Controllers\Webhook\ResendWebhookController;
 use App\Models\Portfolio;
+use Illuminate\Support\Facades\Route;
+use Inertia\Inertia;
+
+// Webhook route (no auth required)
+Route::post('/webhooks/resend', [ResendWebhookController::class, 'handle'])->name('webhooks.resend');
 
 Route::get('/', function () {
     $portfolios = Portfolio::where('is_active', true)->orderBy('sort_order')->get();
+
     return Inertia::render('Welcome', [
-        'portfolios' => $portfolios
+        'portfolios' => $portfolios,
     ]);
 })->name('home');
 
@@ -65,6 +68,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/quotes', [AdminQuoteController::class, 'index'])->name('quotes.index');
         Route::get('/quotes/{id}', [AdminQuoteController::class, 'show'])->name('quotes.show');
         Route::put('/quotes/{id}', [AdminQuoteController::class, 'update'])->name('quotes.update');
+        Route::post('/quotes/{id}/reply', [AdminQuoteController::class, 'reply'])->name('quotes.reply');
         Route::delete('/quotes/{id}', [AdminQuoteController::class, 'destroy'])->name('quotes.destroy');
 
         // Portfolios
@@ -76,7 +80,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::delete('/portfolios/{id}', [AdminPortfolioController::class, 'destroy'])->name('portfolios.destroy');
 
         // Newsletter
-        Route::get('/subscribers', function () { return Inertia::render('Admin/Newsletter/Index'); })->name('subscribers.index');
+        Route::get('/subscribers', function () {
+            return Inertia::render('Admin/Newsletter/Index');
+        })->name('subscribers.index');
     });
 });
 

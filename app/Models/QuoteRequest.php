@@ -33,4 +33,9 @@ class QuoteRequest extends Model
     {
         return $this->belongsTo(User::class, 'assigned_to');
     }
+
+    public function emailMessages()
+    {
+        return $this->hasMany(EmailMessage::class)->orderBy('created_at', 'asc');
+    }
 }

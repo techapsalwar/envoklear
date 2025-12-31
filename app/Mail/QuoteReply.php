@@ -9,45 +9,38 @@ use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-class QuoteRequestReceived extends Mailable
+class QuoteReply extends Mailable
 {
     use Queueable, SerializesModels;
 
-    public $quote;
+    public QuoteRequest $quote;
 
-    /**
-     * Create a new message instance.
-     */
-    public function __construct(QuoteRequest $quote)
+    public string $replySubject;
+
+    public string $replyMessage;
+
+    public function __construct(QuoteRequest $quote, string $subject, string $message)
     {
         $this->quote = $quote;
+        $this->replySubject = $subject;
+        $this->replyMessage = $message;
     }
 
-    /**
-     * Get the message envelope.
-     */
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'New Quote Request from ' . $this->quote->name,
+            subject: $this->replySubject,
+            replyTo: [config('mail.from.address')],
         );
     }
 
-    /**
-     * Get the message content definition.
-     */
     public function content(): Content
     {
         return new Content(
-            view: 'emails.quote-request',
+            view: 'emails.quote-reply',
         );
     }
 
-    /**
-     * Get the attachments for the message.
-     *
-     * @return array<int, \Illuminate\Mail\Mailables\Attachment>
-     */
     public function attachments(): array
     {
         return [];

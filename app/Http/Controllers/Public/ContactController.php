@@ -4,10 +4,9 @@ namespace App\Http\Controllers\Public;
 
 use App\Http\Controllers\Controller;
 use App\Models\QuoteRequest;
-use App\Mail\QuoteRequestReceived;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Redirect;
 
 class ContactController extends Controller
 {
@@ -44,12 +43,7 @@ class ContactController extends Controller
             'source' => 'website',
         ]);
 
-        // Send email notification to admin
-        try {
-            Mail::to(config('mail.from.address'))->send(new QuoteRequestReceived($quote));
-        } catch (\Exception $e) {
-            \Log::error('Failed to send quote notification email: ' . $e->getMessage());
-        }
+        // Send acknowledgment email to user only (no admin notification)
 
         // Send acknowledgment email to user
         try {

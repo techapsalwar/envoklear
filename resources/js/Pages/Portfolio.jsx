@@ -1,10 +1,8 @@
 import { useState } from 'react';
 import { Head } from '@inertiajs/react';
-import GuestLayout from '@/Layouts/GuestLayout';
-import Section from '@/Components/UI/Section';
-import Card from '@/Components/UI/Card';
-import Button from '@/Components/UI/Button';
-import { ExternalLink } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import LandingLayout from '@/Layouts/LandingLayout';
+import { ExternalLink, Sparkles } from 'lucide-react';
 
 export default function Portfolio() {
     const [filter, setFilter] = useState('All');
@@ -61,68 +59,102 @@ export default function Portfolio() {
         : projects.filter(project => project.category === filter);
 
     return (
-        <GuestLayout>
+        <LandingLayout>
             <Head title="Portfolio" />
 
-            <div className="bg-envoklear-dark text-white py-20">
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-                    <h1 className="text-4xl font-extrabold sm:text-5xl mb-6">
-                        Our Work
-                    </h1>
-                    <p className="text-xl text-gray-300 max-w-3xl mx-auto">
-                        Showcasing some of our best projects and success stories.
-                    </p>
+            {/* Hero Section */}
+            <section className="relative py-20 overflow-hidden">
+                <div className="absolute inset-0 bg-gradient-to-b from-accent-purple/10 to-transparent" />
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+                    <motion.div
+                        initial={{ opacity: 0, y: 30 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.6 }}
+                        className="text-center"
+                    >
+                        <div className="inline-flex items-center px-4 py-2 bg-white/10 backdrop-blur-sm rounded-full border border-white/20 mb-8">
+                            <Sparkles className="w-4 h-4 text-accent-purple mr-2" />
+                            <span className="text-sm font-semibold text-white">Our Work</span>
+                        </div>
+                        <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-white mb-6">
+                            Our <span className="text-gradient">Portfolio</span>
+                        </h1>
+                        <p className="text-xl text-gray-300 max-w-3xl mx-auto">
+                            Showcasing some of our best projects and success stories.
+                        </p>
+                    </motion.div>
                 </div>
-            </div>
+            </section>
 
-            <Section>
-                {/* Filter Buttons */}
-                <div className="flex flex-wrap justify-center gap-4 mb-12">
-                    {categories.map((category) => (
-                        <button
-                            key={category}
-                            onClick={() => setFilter(category)}
-                            className={`px-6 py-2 rounded-full text-sm font-medium transition-colors duration-300 ${filter === category
-                                    ? 'bg-envoklear-green text-white'
-                                    : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
-                                }`}
-                        >
-                            {category}
-                        </button>
-                    ))}
-                </div>
+            {/* Filter & Projects */}
+            <section className="py-20">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    {/* Filter Buttons */}
+                    <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true }}
+                        className="flex flex-wrap justify-center gap-4 mb-12"
+                    >
+                        {categories.map((category) => (
+                            <button
+                                key={category}
+                                onClick={() => setFilter(category)}
+                                className={`px-6 py-2.5 rounded-full text-sm font-medium transition-all duration-300 ${filter === category
+                                        ? 'bg-gradient-to-r from-primary to-accent-cyan text-white shadow-lg shadow-primary/30'
+                                        : 'bg-dark-lighter border border-white/10 text-gray-400 hover:text-white hover:border-primary/50'
+                                    }`}
+                            >
+                                {category}
+                            </button>
+                        ))}
+                    </motion.div>
 
-                {/* Projects Grid */}
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                    {filteredProjects.map((project) => (
-                        <Card key={project.id} className="group cursor-pointer">
-                            <div className="relative overflow-hidden h-64">
-                                <img
-                                    src={project.image}
-                                    alt={project.title}
-                                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                                />
-                                <div className="absolute inset-0 bg-black bg-opacity-50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                                    <Button variant="primary" className="flex items-center">
-                                        View Details <ExternalLink size={16} className="ml-2" />
-                                    </Button>
-                                </div>
-                            </div>
-                            <div className="p-6">
-                                <span className="text-xs font-bold text-envoklear-green uppercase tracking-wide">
-                                    {project.category}
-                                </span>
-                                <h3 className="text-xl font-bold text-gray-900 mt-2 mb-3">
-                                    {project.title}
-                                </h3>
-                                <p className="text-gray-600 text-sm">
-                                    {project.description}
-                                </p>
-                            </div>
-                        </Card>
-                    ))}
+                    {/* Projects Grid */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                        <AnimatePresence mode="wait">
+                            {filteredProjects.map((project, index) => (
+                                <motion.div
+                                    key={project.id}
+                                    initial={{ opacity: 0, y: 30 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    exit={{ opacity: 0, scale: 0.9 }}
+                                    transition={{ duration: 0.4, delay: index * 0.1 }}
+                                    className="group bg-dark-lighter/50 backdrop-blur-sm rounded-2xl border border-white/10 overflow-hidden hover:border-primary/50 transition-all"
+                                >
+                                    <div className="relative overflow-hidden h-64">
+                                        <img
+                                            src={project.image}
+                                            alt={project.title}
+                                            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                                        />
+                                        <div className="absolute inset-0 bg-gradient-to-t from-dark via-dark/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                                            <motion.button
+                                                whileHover={{ scale: 1.1 }}
+                                                whileTap={{ scale: 0.95 }}
+                                                className="px-6 py-3 bg-gradient-to-r from-primary to-accent-cyan text-white rounded-full font-medium flex items-center gap-2"
+                                            >
+                                                View Details <ExternalLink className="w-4 h-4" />
+                                            </motion.button>
+                                        </div>
+                                    </div>
+                                    <div className="p-6">
+                                        <span className="text-xs font-bold text-primary uppercase tracking-wide">
+                                            {project.category}
+                                        </span>
+                                        <h3 className="text-xl font-bold text-white mt-2 mb-3 group-hover:text-primary transition-colors">
+                                            {project.title}
+                                        </h3>
+                                        <p className="text-gray-400 text-sm">
+                                            {project.description}
+                                        </p>
+                                    </div>
+                                </motion.div>
+                            ))}
+                        </AnimatePresence>
+                    </div>
                 </div>
-            </Section>
-        </GuestLayout>
+            </section>
+        </LandingLayout>
     );
 }

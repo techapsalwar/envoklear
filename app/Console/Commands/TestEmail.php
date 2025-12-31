@@ -16,7 +16,7 @@ class TestEmail extends Command
         
         try {
             Mail::raw('This is a test email from EnvoKlear Laravel application.', function ($message) {
-                $message->to('envoclear@gmail.com')
+                $message->to('techassistaps@gmail.com')
                     ->subject('Test Email from EnvoKlear');
             });
             

@@ -153,7 +153,14 @@ export default function QuoteIndex({ quotes, filters }) {
                                     <tr key={quote.id} className="hover:bg-gray-50">
                                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">#{quote.id}</td>
                                         <td className="px-6 py-4 whitespace-nowrap">
-                                            <div className="text-sm font-medium text-gray-900">{quote.name}</div>
+                                            <div className="flex items-center gap-2">
+                                                <div className="text-sm font-medium text-gray-900">{quote.name}</div>
+                                                {quote.unread_emails_count > 0 && (
+                                                    <span className="flex items-center justify-center w-5 h-5 bg-red-100 text-red-600 rounded-full text-xs font-bold" title={`${quote.unread_emails_count} unread emails`}>
+                                                        {quote.unread_emails_count}
+                                                    </span>
+                                                )}
+                                            </div>
                                             <div className="text-sm text-gray-500">{quote.email}</div>
                                             {quote.company && <div className="text-xs text-gray-400">{quote.company}</div>}
                                         </td>
@@ -221,8 +228,8 @@ export default function QuoteIndex({ quotes, filters }) {
                                             key={key}
                                             href={link.url}
                                             className={`px-3 py-1 border rounded ${link.active
-                                                    ? 'bg-envoklear-green text-white border-envoklear-green'
-                                                    : 'border-gray-300 text-gray-500 hover:bg-gray-50'
+                                                ? 'bg-envoklear-green text-white border-envoklear-green'
+                                                : 'border-gray-300 text-gray-500 hover:bg-gray-50'
                                                 }`}
                                             dangerouslySetInnerHTML={{ __html: link.label }}
                                         />

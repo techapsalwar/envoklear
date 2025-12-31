@@ -54,8 +54,8 @@ export default function LandingHeader() {
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
                     <motion.div
                         className={`rounded-2xl transition-all duration-300 ${scrolled
-                                ? 'bg-dark/80 backdrop-blur-lg shadow-lg shadow-primary/10 border border-white/10'
-                                : 'bg-transparent'
+                            ? 'bg-dark/80 backdrop-blur-lg shadow-lg shadow-primary/10 border border-white/10'
+                            : 'bg-transparent'
                             }`}
                     >
                         <div className="flex justify-between items-center h-16 px-6">
@@ -87,7 +87,7 @@ export default function LandingHeader() {
                                     >
                                         {item.name}
                                         <motion.span
-                                            className="absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r from-primary to-accent-cyan origin-left"
+                                            className="absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r from-envoklear-green to-accent-cyan origin-left"
                                             initial={{ scaleX: 0 }}
                                             whileHover={{ scaleX: 1 }}
                                             transition={{ duration: 0.3 }}
@@ -105,9 +105,9 @@ export default function LandingHeader() {
                                     whileTap={{ scale: 0.95 }}
                                 >
                                     {/* Gradient background */}
-                                    <span className="absolute inset-0 bg-gradient-to-r from-primary to-accent-cyan"></span>
+                                    <span className="absolute inset-0 bg-gradient-to-r from-envoklear-green to-accent-cyan"></span>
                                     {/* Hover effect */}
-                                    <span className="absolute inset-0 bg-gradient-to-r from-accent-cyan to-primary opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
+                                    <span className="absolute inset-0 bg-gradient-to-r from-accent-cyan to-envoklear-green opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
                                     {/* Glow effect */}
                                     <span className="absolute inset-0 rounded-full shadow-lg shadow-primary/50 group-hover:shadow-accent-cyan/50 transition-shadow duration-300"></span>
                                     <span className="relative z-10 flex items-center gap-2">
@@ -193,7 +193,7 @@ export default function LandingHeader() {
                                                 setShowQuoteModal(true);
                                                 setIsOpen(false);
                                             }}
-                                            className="w-full py-3 text-base font-semibold text-white rounded-full bg-gradient-to-r from-primary to-accent-cyan hover:from-accent-cyan hover:to-primary transition-all shadow-lg shadow-primary/30"
+                                            className="w-full py-3 text-base font-semibold text-white rounded-full bg-gradient-to-r from-envoklear-green to-accent-cyan hover:from-accent-cyan hover:to-envoklear-green transition-all shadow-lg shadow-primary/30"
                                         >
                                             <span className="flex items-center justify-center gap-2">
                                                 <Sparkles className="w-4 h-4" />

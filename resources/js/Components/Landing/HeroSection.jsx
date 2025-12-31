@@ -31,7 +31,7 @@ export default function HeroSection() {
         <section className="relative min-h-screen flex items-center overflow-hidden">
             {/* Animated Mesh Gradient Background */}
             <div className="absolute inset-0 mesh-gradient" />
-            
+
             {/* Overlay for better text readability */}
             <div className="absolute inset-0 bg-dark/70" />
 
@@ -76,46 +76,46 @@ export default function HeroSection() {
                         </motion.h1>
 
                         {/* Rotating Words */}
-                                                <motion.p
-                                                    initial={{ opacity: 0, y: 20 }}
-                                                    animate={{ opacity: 1, y: 0 }}
-                                                    transition={{ duration: 0.6, delay: 0.4 }}
-                                                    className="text-xl sm:text-2xl text-gray-300 mb-8"
-                                                >
-                                                    We build{' '}
-                                                    <span className="text-green-400 font-bold">
-                                                        <TypeAnimation
-                                                            sequence={[
-                                                                'stunning',
-                                                                2000,
-                                                                'converting',
-                                                                2000,
-                                                                'blazing-fast',
-                                                                2000,
-                                                            ]}
-                                                            wrapper="span"
-                                                            speed={50}
-                                                            repeat={Infinity}
-                                                        />
-                                                    </span>
-                                                    {' '}websites
-                                                </motion.p>
+                        <motion.p
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.6, delay: 0.4 }}
+                            className="text-xl sm:text-2xl text-gray-300 mb-8"
+                        >
+                            We build{' '}
+                            <span className="text-envoklear-green font-bold">
+                                <TypeAnimation
+                                    sequence={[
+                                        'stunning',
+                                        2000,
+                                        'converting',
+                                        2000,
+                                        'blazing-fast',
+                                        2000,
+                                    ]}
+                                    wrapper="span"
+                                    speed={50}
+                                    repeat={Infinity}
+                                />
+                            </span>
+                            {' '}websites
+                        </motion.p>
 
-                                                <motion.div
-                                                    initial={{ opacity: 0, y: 20 }}
-                                                    animate={{ opacity: 1, y: 0 }}
-                                                    transition={{ duration: 0.6, delay: 0.6 }}
-                                                    className="flex flex-col sm:flex-row gap-4 justify-center mb-12"
-                                                >
-                                                    <MagneticButton onClick={() => setShowQuoteModal(true)}>
-                                                        Get Free Consultation
-                                                    </MagneticButton>
-                                                    <MagneticButton variant="secondary" onClick={scrollToSection}>
-                                                        See How We're Different
-                                                    </MagneticButton>
-                                                </motion.div>
+                        <motion.div
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.6, delay: 0.6 }}
+                            className="flex flex-col sm:flex-row gap-4 justify-center mb-12"
+                        >
+                            <MagneticButton onClick={() => setShowQuoteModal(true)}>
+                                Get Free Consultation
+                            </MagneticButton>
+                            <MagneticButton variant="secondary" onClick={scrollToSection}>
+                                See How We're Different
+                            </MagneticButton>
+                        </motion.div>
 
-                                                {/* Stats */}
+                        {/* Stats */}
                         <motion.div
                             ref={statsRef}
                             initial={{ opacity: 0, y: 30 }}
@@ -126,9 +126,9 @@ export default function HeroSection() {
                             {stats.map((stat, index) => (
                                 <div key={index} className="text-center lg:text-center">
                                     <div className="text-2xl sm:text-3xl font-bold text-white">
-                                        <AnimatedCounter 
-                                            value={stat.value} 
-                                            prefix={stat.prefix || ''} 
+                                        <AnimatedCounter
+                                            value={stat.value}
+                                            prefix={stat.prefix || ''}
                                             suffix={stat.suffix}
                                             decimals={stat.value % 1 !== 0 ? 1 : 0}
                                         />
@@ -139,7 +139,7 @@ export default function HeroSection() {
                         </motion.div>
                     </div>
 
-                    
+
                 </div>
             </div>
 

@@ -47,29 +47,6 @@ class ResendWebhookController extends Controller
         $bodyHtml = $data['html'] ?? null;
         $bodyText = $data['text'] ?? null;
 
-        // Fallback: If content is missing, fetch full email from Resend API
-        if (empty($bodyHtml) && empty($bodyText) && !empty($data['email_id'])) {
-            try {
-                Log::info('Body missing in webhook, fetching full email from Resend API', ['email_id' => $data['email_id']]);
-                
-                // Use Laravel HTTP client to call Resend API directly
-                // This ensures we hit the correct endpoint for retrieving email content
-                $response = \Illuminate\Support\Facades\Http::withToken(config('services.resend.key'))
-                    ->get('https://api.resend.com/emails/' . $data['email_id']);
-                
-                if ($response->successful()) {
-                    $emailData = $response->json();
-                    $bodyHtml = $emailData['html'] ?? null;
-                    $bodyText = $emailData['text'] ?? null;
-                    Log::info('Successfully fetched email content from API');
-                } else {
-                    Log::error('Resend API Error: ' . $response->body());
-                }
-            } catch (\Exception $e) {
-                Log::error('Failed to fetch email content from Resend API: ' . $e->getMessage());
-            }
-        }
-
         // Processing: If text is missing but HTML exists, strip tags. If HTML missing but text exists, nl2br.
         if (empty($bodyText) && !empty($bodyHtml)) {
             $bodyText = strip_tags($bodyHtml);

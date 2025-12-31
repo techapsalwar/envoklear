@@ -9,7 +9,11 @@
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.bunny.net">
         <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
-
+        <!-- PWA Codes -->
+        <meta name="theme-color" content="#00b84d">
+        <link rel="icon" type="image/svg+xml" href="/envologocolour1.svg">
+        <link rel="apple-touch-icon" href="/envologocolour1.svg">
+        <link rel="manifest" href="/build/manifest.webmanifest">
         <!-- Scripts -->
         @routes
         @viteReactRefresh

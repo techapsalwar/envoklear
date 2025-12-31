@@ -2,6 +2,7 @@ import { Head, useForm } from '@inertiajs/react';
 import AdminLayout from '@/Layouts/AdminLayout';
 import Button from '@/Components/UI/Button';
 import Card from '@/Components/UI/Card';
+import RichTextEditor from '@/Components/Editor/RichTextEditor';
 import { useState } from 'react';
 
 export default function BlogEdit({ blog, categories }) {
@@ -163,14 +164,12 @@ export default function BlogEdit({ blog, categories }) {
                     </div>
 
                     <div>
-                        <label className="block text-sm font-medium text-gray-700">Content *</label>
-                        <textarea
-                            rows="12"
+                        <label className="block text-sm font-medium text-gray-700 mb-2">Content *</label>
+                        <RichTextEditor
                             value={data.content}
-                            onChange={e => setData('content', e.target.value)}
-                            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-envoklear-green focus:ring-envoklear-green sm:text-sm"
-                            required
-                        ></textarea>
+                            onChange={(html) => setData('content', html)}
+                            placeholder="Write your amazing blog post here..."
+                        />
                         {errors.content && <p className="mt-1 text-sm text-red-600">{errors.content}</p>}
                     </div>
 

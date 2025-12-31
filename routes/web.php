@@ -46,9 +46,7 @@ Route::post('/contact', [ContactController::class, 'store'])->name('contact.stor
 Route::post('/newsletter', [NewsletterController::class, 'store'])->name('newsletter.store');
 
 Route::middleware(['auth', 'verified'])->group(function () {
-    Route::get('/dashboard', function () {
-        return Inertia::render('Dashboard');
-    })->name('dashboard');
+    Route::get('/dashboard', [App\Http\Controllers\Admin\DashboardController::class, 'index'])->name('dashboard');
 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');

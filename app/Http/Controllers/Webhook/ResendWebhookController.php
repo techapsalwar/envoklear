@@ -52,14 +52,18 @@ class ResendWebhookController extends Controller
             try {
                 Log::info('Body missing in webhook, fetching full email from Resend API', ['email_id' => $data['email_id']]);
                 
-                // Use Resend client to fetch email details
-                $resend = \Resend::client(config('services.resend.key'));
-                $email = $resend->emails->get($data['email_id']);
+                // Use Laravel HTTP client to call Resend API directly
+                // This ensures we hit the correct endpoint for retrieving email content
+                $response = \Illuminate\Support\Facades\Http::withToken(config('services.resend.key'))
+                    ->get('https://api.resend.com/emails/' . $data['email_id']);
                 
-                if ($email) {
-                    $bodyHtml = $email->html ?? null;
-                    $bodyText = $email->text ?? null;
+                if ($response->successful()) {
+                    $emailData = $response->json();
+                    $bodyHtml = $emailData['html'] ?? null;
+                    $bodyText = $emailData['text'] ?? null;
                     Log::info('Successfully fetched email content from API');
+                } else {
+                    Log::error('Resend API Error: ' . $response->body());
                 }
             } catch (\Exception $e) {
                 Log::error('Failed to fetch email content from Resend API: ' . $e->getMessage());

@@ -12,45 +12,60 @@ class ResendWebhookController extends Controller
 {
     public function handle(Request $request)
     {
-        $payload = $request->all();
+        try {
+            $payload = $request->all();
 
-        Log::info('Resend webhook received', ['type' => $payload['type'] ?? 'unknown']);
+            Log::info('Resend webhook received', ['type' => $payload['type'] ?? 'unknown']);
 
-        // Handle inbound email
-        if (($payload['type'] ?? '') === 'email.received') {
-            $this->handleInboundEmail($payload['data'] ?? []);
+            // Handle inbound email
+            if (($payload['type'] ?? '') === 'email.received') {
+                $this->handleInboundEmail($payload['data'] ?? []);
+            }
+
+            return response()->json(['status' => 'ok']);
+        } catch (\Exception $e) {
+            Log::error('Webhook processing failed: ' . $e->getMessage());
+            Log::error($e->getTraceAsString());
+            
+            // Return 200 even on error to prevent Resend from retrying endlessly if it's a code bug
+            return response()->json(['status' => 'error', 'message' => $e->getMessage()], 200);
         }
-
-        return response()->json(['status' => 'ok']);
     }
 
     protected function handleInboundEmail(array $data): void
     {
-        $fromEmail = $data['from'] ?? '';
-        $toEmail = $data['to'] ?? '';
+        // Resend "from" field is typically "Name <email@domain.com>"
+        $rawFrom = $data['from'] ?? '';
+        $fromEmail = $this->extractEmail($rawFrom);
+        
+        // Resend "to" is an array of strings
+        $rawTo = $data['to'] ?? [];
+        $toEmail = is_array($rawTo) ? implode(', ', $rawTo) : (string)$rawTo;
+        
         $subject = $data['subject'] ?? 'No Subject';
         $bodyHtml = $data['html'] ?? '';
         $bodyText = $data['text'] ?? '';
 
         Log::info('Processing inbound email', [
-            'from' => $fromEmail,
-            'to' => $toEmail,
+            'raw_from' => $rawFrom,
+            'extracted_email' => $fromEmail,
             'subject' => $subject,
         ]);
 
+        if (empty($fromEmail)) {
+            Log::warning('Could not extract email from: ' . $rawFrom);
+            return;
+        }
+
         // Try to find the quote request by sender email
         $quoteRequest = QuoteRequest::where('email', $fromEmail)->latest()->first();
-
-        if (!$quoteRequest) {
-            Log::warning('No quote request found for email: ' . $fromEmail);
-        }
 
         // Store the inbound email
         EmailMessage::create([
             'quote_request_id' => $quoteRequest?->id,
             'direction' => 'inbound',
-            'from_email' => $fromEmail,
-            'from_name' => $this->extractName($fromEmail),
+            'from_email' => $fromEmail, 
+            'from_name' => $this->extractName($rawFrom),
             'to_email' => $toEmail,
             'subject' => $subject,
             'body_html' => $bodyHtml,
@@ -62,17 +77,25 @@ class ResendWebhookController extends Controller
 
         Log::info('Inbound email stored', [
             'quote_request_id' => $quoteRequest?->id,
-            'from' => $fromEmail,
+            'from_email' => $fromEmail,
         ]);
     }
 
-    protected function extractName(string $email): ?string
+    protected function extractEmail(string $string): string
     {
-        // Extract name from "Name <email@example.com>" format
-        if (preg_match('/^(.+?)\s*<.+>$/', $email, $matches)) {
-            return trim($matches[1]);
+        // Extract email from "Name <email@example.com>" or just "email@example.com"
+        if (preg_match('/<([^>]+)>/', $string, $matches)) {
+            return $matches[1];
         }
+        return trim($string);
+    }
 
+    protected function extractName(string $string): ?string
+    {
+        // Extract name from "Name <email@example.com>"
+        if (preg_match('/^(.+?)\s*<.+>$/', $string, $matches)) {
+            return trim($matches[1], ' "\'');
+        }
         return null;
     }
 }

@@ -56,7 +56,8 @@ jobs:
             if [ -d "public" ] && [ ! -f "index.php" ]; then
               echo "📁 Copying public folder contents to root..."
               cp -r public/* ./
-              cp public/.htaccess ./ 2>/dev/null || true
+              # NOTE: Do NOT copy public/.htaccess - root .htaccess has security rules!
+              # The root .htaccess blocks .env access and redirects to public/
               
               echo "📝 Updating index.php paths..."
               sed -i "s|__DIR__.'/../vendor/autoload.php'|__DIR__.'/vendor/autoload.php'|g" index.php

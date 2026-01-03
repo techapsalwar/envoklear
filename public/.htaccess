@@ -5,6 +5,10 @@
 
     RewriteEngine On
 
+    # Block direct access to env and hidden files
+    RewriteRule (^|/)\.env(\..*)?$ - [F,L]
+    RewriteRule (^|/)\.git - [F,L]
+
     # Handle Authorization Header
     RewriteCond %{HTTP:Authorization} .
     RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
